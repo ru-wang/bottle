@@ -1,0 +1,6 @@
+function(_bottle_populate_srcs _bottle_populated_srcs_)
+  foreach(__src_ IN LISTS ARGN)
+    list(APPEND ${_bottle_populated_srcs_} ${CMAKE_CURRENT_LIST_DIR}/${__src_})
+  endforeach()
+  set(${_bottle_populated_srcs_} ${${_bottle_populated_srcs_}} PARENT_SCOPE)
+endfunction(_bottle_populate_srcs)

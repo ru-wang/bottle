@@ -1,0 +1,6 @@
+function(_bottle_try_link_package _bottle_tgt_name_)
+  if(TARGET ${BOTTLE_PACKAGE_NAME})
+    target_link_libraries(${BOTTLE_PACKAGE_NAME} INTERFACE ${_bottle_tgt_name_})
+    message(VERBOSE "[bottle] link package target with ${_bottle_tgt_name_}")
+  endif()
+endfunction(_bottle_try_link_package)
