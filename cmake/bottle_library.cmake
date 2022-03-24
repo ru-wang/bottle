@@ -5,7 +5,7 @@ include(cmake/internal/_bottle_try_link_package)
 
 function(bottle_library)
   # parse arguments
-  cmake_parse_arguments(__bottle_tgt "XCLD" "NAME" "SRCS;HDRS;CFGS;DEPS;OPTS;DEFS" ${ARGN})
+  cmake_parse_arguments(__bottle_tgt "XCLD" "NAME" "SRCS;HDRS;CFGS;DEPS;FEAT;OPTS;DEFS" ${ARGN})
 
   if(NOT __bottle_tgt_NAME)
     # NAME not defined or empty
@@ -34,7 +34,13 @@ function(bottle_library)
   endif()
 
   if(__bottle_tgt_transcope_)
-    target_compile_features(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} cxx_std_17)
+    if(__bottle_tgt_FEAT)
+      target_compile_features(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} ${__bottle_tgt_FEAT})
+    else()
+      # FEAT not defined or empty
+      target_compile_features(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} cxx_std_17)
+    endif()
+
     target_compile_options(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} ${__bottle_tgt_OPTS})
     target_compile_definitions(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} ${__bottle_tgt_DEFS})
 
