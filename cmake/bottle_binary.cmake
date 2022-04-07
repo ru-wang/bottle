@@ -29,7 +29,12 @@ function(bottle_binary)
     set_target_properties(${__bottle_tgt_name_} PROPERTIES OUTPUT_NAME ${__bottle_tgt_NAME})
   else()
     # add a binary target alias
-    add_executable(${__bottle_tgt_name_} ALIAS ${__bottle_tgt_deps_})
+    get_target_property(__bottle_tgt_deps_alias_ ${__bottle_tgt_deps_} ALIASED_TARGET)
+    if(__bottle_tgt_deps_alias_)
+      add_executable(${__bottle_tgt_name_} ALIAS ${__bottle_tgt_deps_alias_})
+    else()
+      add_executable(${__bottle_tgt_name_} ALIAS ${__bottle_tgt_deps_})
+    endif()
   endif()
 
   if(__bottle_tgt_transcope_)
@@ -42,9 +47,7 @@ function(bottle_binary)
 
     target_compile_options(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} ${__bottle_tgt_OPTS})
     target_compile_definitions(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} ${__bottle_tgt_DEFS})
-
     target_include_directories(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} ${PROJECT_SOURCE_DIR})
-
     target_link_libraries(${__bottle_tgt_name_} ${__bottle_tgt_transcope_} ${__bottle_tgt_deps_})
   endif()
 
