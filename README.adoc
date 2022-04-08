@@ -10,3 +10,99 @@
  ░          ░ ░                        ░  ░   ░  ░
       ░                                           
 ....
+
+== Basic Usages
+
+[cols="a,a,a"]
+|===
+|Command |Arguments |Explanation
+
+|`+bottle_package+`
+|`+DEPS+`
+|
+Add a package target for the current directory with `+add_library+`.
+
+Create a interface library named as `+///PROJECT:PACKAGE+` or `+///PROJECT:deps+` if marked as `+DEPS+`.
+
+All other library targets in the same package will be linked to this package except for those marked as `+XCLD+`.
+
+|`+bottle_library+`
+|
+* `+NAME <name>+`
+* `+SRCS <source_list>+`
+* `+HDRS <header_list>+`
+* `+CFGS <config_list>+`
+* `+DEPS <dependencies>+`
+* `+FEAT <compile_features>+`
+* `+OPTS <compile_options>+`
+* `+DEFS <compile_definitions>+`
+* `+XCLD+`
+|
+Add a library target with the given `+name+` via `+add_library+`.
+
+Create a shared/interface library named as `+///PROJECT:PACKAGE:name+`.
+
+Link this target to the current package `+///PROJECT:PACKAGE+` if exists and not given `+XCLD+`.
+
+|`+bottle_binary+`
+|
+* `+NAME <name>+`
+* `+SRCS <source_list>+`
+* `+HDRS <header_list>+`
+* `+DEPS <dependencies>+`
+* `+FEAT <compile_features>+`
+* `+OPTS <compile_options>+`
+* `+DEFS <compile_definitions>+`
+|
+Add a binary target with the given `+name+` via `+add_library+`.
+
+Create an executable named as `+///PROJECT:PACKAGE:name+`.
+
+|`+bottle_proto+`
+|
+* `+NAME <name>+`
+* `+MSGS <message_list>+`
+* `+XCLD+`
+|
+Add a proto target with the given `+name+` via `+add_library+`.
+
+Same with `+bottle_library+` except this will compile the `+message_list+` and link to `+@protobuf+`.
+
+Make sure a `+@protobuf+` dependency target is created.
+
+|`+bottle_subdir+`
+|
+* `+NAME <name>+`
+* `+XCLD+`
+|
+Add subdirectory named as `+name+` via `+add_subdirectory+`.
+
+Same with `+add_subdirectory+` except this will link the package target of `+name+` to the current package `+///PROJECT:PACKAGE+` if exists and not given `+XCLD+`.
+
+|`+bottle_expand+`
+|
+* `+<expanded_name>+`
+* `+<name>+`
+|A helper command to expand a dependency `+name+` to the internal target `+expanded_name+`.
+|===
+
+== Dependency Expansion Rules
+
+* Prefix `+@+` is used to mark external targets of current project.
++
+`+@TARGET+` expands to `+${PROJECT_NAME}+deps+TARGET+`
+
+* Prefix `+///+` is used to mark packages/targets built with other projects.
++
+`+///PROJECT:PACKAGE[:TARGET]+` expands to `+PROJECT+PACKAGE[+TARGET]+`
+
+* Prefix `+//+` is used to mark packages/targets of current projects.
++
+`+//PACKAGE[:TARGET]+` expands to `+${PROJECT_NAME}+PACKAGE[+TARGET]+`
+
+* Prefix `+:+` is used to mark targets within current package.
++
+Prefix `+/+` is used to mark subpackages/targets within current package.
++
+** `+:TARGET+` expands to `+${PROJECT_NAME}+PACKAGE+TARGET+`.
+** `+/SUBPACKAGE[:TARGET]+` expands to `+${PROJECT_NAME}+PACKAGE.SUBPACKAGE[+TARGET]+`.
