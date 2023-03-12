@@ -8,12 +8,12 @@ function(_bottle_compile_msgs _bottle_compiled_srcs_ _bottle_compiled_hdrs_)
     string(REGEX REPLACE "^(.+)\\${__msg_ext_}" "\\1" __msg_name_ ${__msg_})
 
     add_custom_command(
-      OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${__msg_name_}.pb.cc
-              ${CMAKE_CURRENT_BINARY_DIR}/${__msg_name_}.pb.h
       COMMAND $<TARGET_FILE:${__protoc_}>
-              --proto_path=${PROJECT_SOURCE_DIR}
+      ARGS    --proto_path=${PROJECT_SOURCE_DIR}
               --cpp_out=${PROJECT_BINARY_DIR}
               ${CMAKE_CURRENT_LIST_DIR}/${__msg_}
+      OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${__msg_name_}.pb.cc
+              ${CMAKE_CURRENT_BINARY_DIR}/${__msg_name_}.pb.h
       DEPENDS ${CMAKE_CURRENT_LIST_DIR}/${__msg_})
 
     list(APPEND ${_bottle_compiled_srcs_} ${CMAKE_CURRENT_BINARY_DIR}/${__msg_name_}.pb.cc)
